@@ -23,9 +23,9 @@ export default class Breathe extends Vue {
 
   inspire = 4
 
-  hold = 2
+  hold = 4
 
-  expire = 3
+  expire = 4
 
   timeout: number | null = null
 
