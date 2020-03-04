@@ -27,7 +27,7 @@ export default class Breathe extends Vue {
 
   expire = 3
 
-  timeout = undefined
+  timeout: number | null = null
 
   getCycleLength() {
     return this.inspire + this.expire + this.hold;
@@ -42,7 +42,7 @@ export default class Breathe extends Vue {
   toggle() {
     if (this.timeout) {
       clearTimeout(this.timeout);
-      this.timeout = undefined;
+      this.timeout = null;
     } else {
       this.increment();
     }

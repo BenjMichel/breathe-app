@@ -13,6 +13,11 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 function getRadiusRatio({
   current, inspire, expire, hold,
+}: {
+  current: number;
+  inspire: number;
+  expire: number;
+  hold: number;
 }) {
   if (current <= inspire) return current / inspire;
   if (current <= inspire + hold) return 1;
@@ -21,6 +26,11 @@ function getRadiusRatio({
 
 function getRadius({
   current, inspire, expire, hold,
+}: {
+  current: number;
+  inspire: number;
+  expire: number;
+  hold: number;
 }) {
   const base = 50;
   const amplitude = 40;
@@ -35,7 +45,14 @@ const yCenter = 100;
 const angleOffset = -(Math.PI / 2);
 const TWO_PI = Math.PI * 2;
 
-function getLingrad(vueCanvas, startAngle, endAngle, radius, color1, color2) {
+function getLingrad(
+  vueCanvas: CanvasRenderingContext2D,
+  startAngle: number,
+  endAngle: number,
+  radius: number,
+  color1: string,
+  color2: string,
+) {
   const xStart = xCenter + Math.cos(startAngle) * radius;
   const xEnd = xCenter + Math.cos(endAngle) * radius;
   const yStart = yCenter + Math.sin(startAngle) * radius;
@@ -57,6 +74,8 @@ export default class Breathe extends Vue {
   @Prop() private expire!: number;
 
   @Prop() private current!: number;
+
+  private vueCanvas: CanvasRenderingContext2D | null = null;
 
   get isInspireActive() {
     return this.current < this.inspire;
@@ -84,6 +103,7 @@ export default class Breathe extends Vue {
   }
 
   drawBaseCircle() {
+    if (!this.vueCanvas) return;
     this.vueCanvas.beginPath();
     const radius = this.getRadius();
     const x = 100;
@@ -101,6 +121,7 @@ export default class Breathe extends Vue {
   }
 
   drawInspireArc() {
+    if (!this.vueCanvas) return;
     const length = Math.min(this.current, this.inspire);
     const lengthRatio = length / this.inspire;
     const endRatio = this.inspire / this.getCycleLength();
@@ -116,6 +137,7 @@ export default class Breathe extends Vue {
   }
 
   drawHoldArc() {
+    if (!this.vueCanvas) return;
     const length = Math.min(this.current - this.inspire, this.hold);
     if (length <= 0) return;
     const lengthRatio = length / this.hold;
@@ -133,6 +155,7 @@ export default class Breathe extends Vue {
   }
 
   drawExpireArc() {
+    if (!this.vueCanvas) return;
     const length = Math.min(this.current - this.inspire - this.hold, this.expire);
     if (length <= 0) return;
     const lengthRatio = length / this.expire;
@@ -150,6 +173,7 @@ export default class Breathe extends Vue {
   }
 
   renderWatch() {
+    if (!this.vueCanvas) return;
     this.vueCanvas.clearRect(0, 0, 200, 200);
     this.drawBaseCircle();
     this.drawInspireArc();
@@ -158,9 +182,8 @@ export default class Breathe extends Vue {
   }
 
   mounted() {
-    const c = document.getElementById('c');
-    const ctx = c.getContext('2d');
-    this.vueCanvas = ctx;
+    const canvas = document.getElementById('c') as HTMLCanvasElement;
+    this.vueCanvas = canvas.getContext('2d');
     this.renderWatch();
   }
 
