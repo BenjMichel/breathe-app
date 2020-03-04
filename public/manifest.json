@@ -1,0 +1,16 @@
+{
+  "name": "Breathe app",
+  "short_name": "Breathe",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#88A4F7",
+  "theme_color": "#88A4F7",
+  "icons": [
+    {
+      "src": "img/icons/android-chrome-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
