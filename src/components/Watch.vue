@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <canvas width="200" height="200" id="c"></canvas>
+    <canvas id="c"></canvas>
     <p v-bind:class="isInspireActive ? 'isActive' : ''">I: {{inspire}}</p>
     <p v-bind:class="isHoldActive ? 'isActive' : ''">H: {{hold}}</p>
     <p v-bind:class="isExpireActive ? 'isActive' : ''">P: {{expire}}</p>
@@ -40,8 +40,9 @@ function getRadius({
   return base + amplitude * ratio;
 }
 
-const xCenter = 100;
-const yCenter = 100;
+const canvasSize = 200;
+const xCenter = canvasSize / 2;
+const yCenter = canvasSize / 2;
 const angleOffset = -(Math.PI / 2);
 const TWO_PI = Math.PI * 2;
 
@@ -184,6 +185,22 @@ export default class Breathe extends Vue {
   mounted() {
     const canvas = document.getElementById('c') as HTMLCanvasElement;
     this.vueCanvas = canvas.getContext('2d');
+
+    // Set display canvasSize (css pixels).
+    canvas.style.width = `${canvasSize}px`;
+    canvas.style.height = `${canvasSize}px`;
+
+    // Set actual canvasSize in memory (scaled to account for extra pixel density).
+    // <--- Change to 1 on retina screens to see blurry canvas.
+    const scale = window.devicePixelRatio;
+    canvas.width = canvasSize * scale;
+    canvas.height = canvasSize * scale;
+
+    // Normalize coordinate system to use css pixels.
+    if (this.vueCanvas) {
+      this.vueCanvas.scale(scale, scale);
+      this.vueCanvas.translate(0.5, 0.5);
+    }
     this.renderWatch();
   }
 
