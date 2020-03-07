@@ -117,7 +117,7 @@ export default class Breathe extends Vue {
 
     this.vueCanvas.lineWidth = 5;
     this.vueCanvas.lineCap = 'round';
-    this.vueCanvas.fillStyle = 'white';
+    this.vueCanvas.fillStyle = '#F0F0F0';
     this.vueCanvas.fill();
   }
 
@@ -133,7 +133,7 @@ export default class Breathe extends Vue {
     const anticlockwise = false;
 
     this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle, anticlockwise);
-    this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#00ABEB', '#26C000');
+    this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#00ABEB', '#00FFA9');
     this.vueCanvas.stroke();
   }
 
@@ -151,7 +151,7 @@ export default class Breathe extends Vue {
     const anticlockwise = false;
 
     this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle, anticlockwise);
-    this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#F0F', '#F00');
+    this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#FF0A6C', '#FF0061');
     this.vueCanvas.stroke();
   }
 
@@ -169,7 +169,7 @@ export default class Breathe extends Vue {
     const anticlockwise = false;
 
     this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle, anticlockwise);
-    this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#FF0', '#F0F');
+    this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#A081FA', '#7BB9F6');
     this.vueCanvas.stroke();
   }
 
