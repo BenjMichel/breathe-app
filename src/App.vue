@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Breathe msg="Welcome to Your Vue.js + TypeScript App"/>
+    <link href="https://fonts.googleapis.com/css?family=Spartan&display=swap" rel="stylesheet">
   </div>
 </template>
 
@@ -18,7 +19,7 @@ export default class App extends Vue {}
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Spartan, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
