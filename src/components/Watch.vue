@@ -103,6 +103,42 @@ export default class Breathe extends Vue {
     return this.inspire + this.expire + this.hold;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  getAngleInspireStart() {
+    return angleOffset;
+  }
+
+  getAngleInspireCurrent() {
+    const length = Math.min(this.current, this.inspire);
+    const lengthRatio = length / this.inspire;
+    const endRatio = this.inspire / this.getCycleLength();
+    return angleOffset + (TWO_PI * endRatio * lengthRatio);
+  }
+
+  getAngleHoldStart() {
+    return angleOffset + (TWO_PI * (this.inspire / this.getCycleLength()));
+  }
+
+  getAngleHoldCurrent() {
+    const length = Math.min(this.current - this.inspire, this.hold);
+    if (length <= 0) return angleOffset;
+    const lengthRatio = length / this.hold;
+    const endRatio = this.hold / this.getCycleLength();
+    return this.getAngleHoldStart() + (TWO_PI * endRatio * lengthRatio);
+  }
+
+  getAngleExpireStart() {
+    return angleOffset + (TWO_PI * ((this.inspire + this.hold) / this.getCycleLength()));
+  }
+
+  getAngleExpireCurrent() {
+    const length = Math.min(this.current - this.inspire - this.hold, this.expire);
+    if (length <= 0) return angleOffset;
+    const lengthRatio = length / this.expire;
+    const endRatio = this.expire / this.getCycleLength();
+    return this.getAngleExpireStart() + (TWO_PI * endRatio * lengthRatio);
+  }
+
   drawBaseCircle() {
     if (!this.vueCanvas) return;
     this.vueCanvas.beginPath();
@@ -123,54 +159,61 @@ export default class Breathe extends Vue {
 
   drawInspireArc() {
     if (!this.vueCanvas) return;
-    const length = Math.min(this.current, this.inspire);
-    const lengthRatio = length / this.inspire;
-    const endRatio = this.inspire / this.getCycleLength();
     this.vueCanvas.beginPath();
     const radius = this.getRadius();
-    const startAngle = angleOffset;
-    const endAngle = angleOffset + (TWO_PI * endRatio * lengthRatio);
-    const anticlockwise = false;
+    const startAngle = this.getAngleInspireStart();
+    const endAngle = this.getAngleInspireCurrent();
 
-    this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle, anticlockwise);
+    this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle);
     this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#00ABEB', '#00FFA9');
     this.vueCanvas.stroke();
   }
 
   drawHoldArc() {
     if (!this.vueCanvas) return;
-    const length = Math.min(this.current - this.inspire, this.hold);
-    if (length <= 0) return;
-    const lengthRatio = length / this.hold;
-    const endRatio = this.hold / this.getCycleLength();
     this.vueCanvas.beginPath();
-    const radius = this.getRadius(); // Arc radius
-    const holdAngleStart = (TWO_PI * (this.inspire / this.getCycleLength()));
-    const startAngle = angleOffset + holdAngleStart;
-    const endAngle = startAngle + (TWO_PI * endRatio * lengthRatio);
-    const anticlockwise = false;
+    const startAngle = this.getAngleHoldStart();
+    const endAngle = this.getAngleHoldCurrent();
+    const radius = this.getRadius();
+    if (endAngle === angleOffset) return;
 
-    this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle, anticlockwise);
+    this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle);
     this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#FF0A6C', '#FF0061');
     this.vueCanvas.stroke();
   }
 
   drawExpireArc() {
     if (!this.vueCanvas) return;
-    const length = Math.min(this.current - this.inspire - this.hold, this.expire);
-    if (length <= 0) return;
-    const lengthRatio = length / this.expire;
-    const endRatio = this.expire / this.getCycleLength();
     this.vueCanvas.beginPath();
+    const startAngle = this.getAngleExpireStart();
+    const endAngle = this.getAngleExpireCurrent();
     const radius = this.getRadius();
-    const expireAngleStart = (TWO_PI * ((this.inspire + this.hold) / this.getCycleLength()));
-    const startAngle = angleOffset + expireAngleStart;
-    const endAngle = startAngle + (TWO_PI * endRatio * lengthRatio);
-    const anticlockwise = false;
+    if (endAngle === angleOffset) return;
 
-    this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle, anticlockwise);
+    this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle);
     this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#A081FA', '#7BB9F6');
     this.vueCanvas.stroke();
+  }
+
+  drawADelimiter(angle: number) {
+    if (!this.vueCanvas) return;
+    this.vueCanvas.fillStyle = 'black';
+    const delimiterRadius = 5;
+    const baseRadius = this.getRadius();
+    const x = xCenter + Math.cos(angle) * baseRadius;
+    const y = yCenter + Math.sin(angle) * baseRadius;
+
+    this.vueCanvas.beginPath();
+    this.vueCanvas.arc(x, y, delimiterRadius, 0, TWO_PI);
+    this.vueCanvas.fill();
+    this.vueCanvas.closePath();
+  }
+
+  drawDelimiters() {
+    if (!this.vueCanvas) return;
+    this.drawADelimiter(this.getAngleInspireStart());
+    this.drawADelimiter(this.getAngleHoldStart());
+    this.drawADelimiter(this.getAngleExpireStart());
   }
 
   renderWatch() {
@@ -180,6 +223,7 @@ export default class Breathe extends Vue {
     this.drawInspireArc();
     this.drawHoldArc();
     this.drawExpireArc();
+    this.drawDelimiters();
   }
 
   mounted() {
@@ -199,7 +243,7 @@ export default class Breathe extends Vue {
     // Normalize coordinate system to use css pixels.
     if (this.vueCanvas) {
       this.vueCanvas.scale(scale, scale);
-      this.vueCanvas.translate(0.5, 0.5);
+      this.vueCanvas.translate(0.5, 0.5); // avoid blurry renders
     }
     this.renderWatch();
   }
