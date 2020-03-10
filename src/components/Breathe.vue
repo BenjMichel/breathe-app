@@ -11,6 +11,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { Howl } from 'howler';
 import Watch from './Watch.vue';
 
 @Component({
@@ -29,13 +30,28 @@ export default class Breathe extends Vue {
 
   timeout: number | null = null
 
+  soundGong: Howl = new Howl({ src: ['gong.mp3'] })
+
   getCycleLength() {
     return this.inspire + this.expire + this.hold;
+  }
+
+  shouldPlaySound() {
+    const inspireStart = 0;
+    const holdStart = this.inspire;
+    const expireStart = this.inspire + this.hold;
+    const starts = [inspireStart, holdStart, expireStart];
+    return starts.includes(this.current);
   }
 
   increment() {
     this.current = Math.round((this.current + 0.1) * 10) / 10;
     if (this.current >= this.getCycleLength()) this.current = 0;
+    if (this.shouldPlaySound()) {
+      if (this.soundGong) {
+        this.soundGong.play();
+      }
+    }
     this.timeout = setTimeout(() => this.increment(), 100);
   }
 
@@ -44,6 +60,9 @@ export default class Breathe extends Vue {
       clearTimeout(this.timeout);
       this.timeout = null;
     } else {
+      if (this.soundGong) {
+        this.soundGong.play();
+      }
       this.increment();
     }
   }
