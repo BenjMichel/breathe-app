@@ -1,11 +1,21 @@
 <template>
-  <div class="background" v-on:click="toggle">
-    <Watch
-      :inspire="inspire"
-      :hold="hold"
-      :expire="expire"
-      :current="current"
-    />
+  <div class="background">
+    <div v-on:click="toggle">
+      <Watch
+        :inspire="inspire"
+        :hold="hold"
+        :expire="expire"
+        :current="current"
+      />
+    </div>
+    <div
+      v-on:click="toggleSound"
+      v-bind:class="isSoundActive ? 'icon-sound icon-sound_active' : 'icon-sound'"
+    >
+      <ion-icon
+        v-bind:name="isSoundActive ? 'volume-high-outline' : 'volume-off-outline'"
+      ></ion-icon>
+    </div>
   </div>
 </template>
 
@@ -30,6 +40,8 @@ export default class Breathe extends Vue {
 
   timeout: number | null = null
 
+  isSoundActive = false
+
   soundGong: Howl = new Howl({ src: ['gong.mp3'] })
 
   getCycleLength() {
@@ -37,6 +49,7 @@ export default class Breathe extends Vue {
   }
 
   shouldPlaySound() {
+    if (!this.isSoundActive) return false;
     const inspireStart = 0;
     const holdStart = this.inspire;
     const expireStart = this.inspire + this.hold;
@@ -60,11 +73,15 @@ export default class Breathe extends Vue {
       clearTimeout(this.timeout);
       this.timeout = null;
     } else {
-      if (this.soundGong) {
+      if (this.soundGong && this.isSoundActive) {
         this.soundGong.play();
       }
       this.increment();
     }
+  }
+
+  toggleSound() {
+    this.isSoundActive = !this.isSoundActive;
   }
 }
 </script>
@@ -76,5 +93,21 @@ export default class Breathe extends Vue {
   width: 100vw;
   background-image: url("../assets/background.jpg");
   background-size: cover;
+}
+
+.icon-sound {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  cursor: pointer;
+  font-size: 32px;
+  transition: all 0.3s ease;
+}
+
+.icon-sound_active {
+  font-size: 36px;
+  color: white;
+  right: 8px;
+  bottom: 8px;
 }
 </style>

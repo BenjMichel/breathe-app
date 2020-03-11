@@ -27,6 +27,9 @@ export default class App extends Vue {}
   margin: 0px;
 }
 
+::-moz-selection { color: transparent}
+::selection { color: transparent}
+
 body,html {
   margin: 0px;
 }
