@@ -1,10 +1,9 @@
 <template>
   <div class="container">
     <canvas id="c"></canvas>
-    <p v-bind:class="isInspireActive ? 'isActive' : ''">I: {{inspire}}</p>
-    <p v-bind:class="isHoldActive ? 'isActive' : ''">H: {{hold}}</p>
-    <p v-bind:class="isExpireActive ? 'isActive' : ''">P: {{expire}}</p>
-    <p>C: {{current}}</p>
+    <p v-bind:class="isInspireActive ? 'isActive' : ''">Inspire: {{inspire}}</p>
+    <p v-bind:class="isHoldActive ? 'isActive' : ''">Hold: {{hold}}</p>
+    <p v-bind:class="isExpireActive ? 'isActive' : ''">Expire: {{expire}}</p>
   </div>
 </template>
 
