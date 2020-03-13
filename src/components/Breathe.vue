@@ -24,6 +24,8 @@ import { Component, Vue } from 'vue-property-decorator';
 import { Howl } from 'howler';
 import Watch from './Watch.vue';
 
+const INCREMENT_DURATION_SECONDS = 0.01;
+
 @Component({
   components: {
     Watch,
@@ -58,14 +60,14 @@ export default class Breathe extends Vue {
   }
 
   increment() {
-    this.current = Math.round((this.current + 0.1) * 10) / 10;
+    this.current = Math.round((this.current + INCREMENT_DURATION_SECONDS) * 100) / 100;
     if (this.current >= this.getCycleLength()) this.current = 0;
     if (this.shouldPlaySound()) {
       if (this.soundGong) {
         this.soundGong.play();
       }
     }
-    this.timeout = setTimeout(() => this.increment(), 100);
+    this.timeout = setTimeout(() => this.increment(), INCREMENT_DURATION_SECONDS * 1000);
   }
 
   toggle() {
