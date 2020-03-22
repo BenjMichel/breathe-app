@@ -33,15 +33,15 @@ function getRadius({
   expire: number;
   hold: number;
 }) {
-  const base = 50;
-  const amplitude = 40;
+  const base = 60;
+  const amplitude = 50;
   const ratio = getRadiusRatio({
     current, inspire, expire, hold,
   });
   return base + amplitude * ratio;
 }
 
-const canvasSize = 200;
+const canvasSize = 300;
 const xCenter = canvasSize / 2;
 const yCenter = canvasSize / 2;
 const angleOffset = -(Math.PI / 2);
@@ -148,8 +148,8 @@ export default class Breathe extends Vue {
     if (!this.vueCanvas) return;
     this.vueCanvas.beginPath();
     const radius = this.getRadius();
-    const x = 100;
-    const y = 100;
+    const x = canvasSize / 2;
+    const y = canvasSize / 2;
     const startAngle = 0;
     const endAngle = TWO_PI;
     const anticlockwise = false;
@@ -226,7 +226,7 @@ export default class Breathe extends Vue {
 
   renderWatch() {
     if (!this.vueCanvas) return;
-    this.vueCanvas.clearRect(0, 0, 200, 200);
+    this.vueCanvas.clearRect(0, 0, canvasSize, canvasSize);
     this.drawBaseCircle();
     this.drawInspireArc();
     this.drawHoldArc();

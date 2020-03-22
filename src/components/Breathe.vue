@@ -109,6 +109,7 @@ export default class Breathe extends Vue {
   bottom: 10px;
   color: white;
   margin: 0px;
+  font-weight: bold;
 }
 
 .icon-sound {
