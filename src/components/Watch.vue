@@ -1,9 +1,11 @@
 <template>
   <div class="container">
     <canvas id="c"></canvas>
-    <p v-bind:class="isInspireActive ? 'isActive' : ''">Inspire: {{inspire}}</p>
-    <p v-bind:class="isHoldActive ? 'isActive' : ''">Hold: {{hold}}</p>
-    <p v-bind:class="isExpireActive ? 'isActive' : ''">Expire: {{expire}}</p>
+    <div class="text-container">
+      <p v-bind:class="isInspireActive ? 'isActive' : ''">Inspire: {{inspire}}</p>
+      <p v-bind:class="isHoldActive ? 'isActive' : ''">Hold: {{hold}}</p>
+      <p v-bind:class="isExpireActive ? 'isActive' : ''">Expire: {{expire}}</p>
+    </div>
   </div>
 </template>
 
@@ -98,6 +100,10 @@ export default class Breathe extends Vue {
     });
   }
 
+  getLineWidth() {
+    return this.getRadius() / 8;
+  }
+
   getCycleLength() {
     return this.inspire + this.expire + this.hold;
   }
@@ -165,6 +171,7 @@ export default class Breathe extends Vue {
 
     this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle);
     this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#00ABEB', '#00FFA9');
+    this.vueCanvas.lineWidth = this.getLineWidth();
     this.vueCanvas.stroke();
   }
 
@@ -178,6 +185,7 @@ export default class Breathe extends Vue {
 
     this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle);
     this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#FF0A6C', '#FF0061');
+    this.vueCanvas.lineWidth = this.getLineWidth();
     this.vueCanvas.stroke();
   }
 
@@ -191,13 +199,14 @@ export default class Breathe extends Vue {
 
     this.vueCanvas.arc(xCenter, yCenter, radius, startAngle, endAngle);
     this.vueCanvas.strokeStyle = getLingrad(this.vueCanvas, startAngle, endAngle, radius, '#A081FA', '#7BB9F6');
+    this.vueCanvas.lineWidth = this.getLineWidth();
     this.vueCanvas.stroke();
   }
 
   drawADelimiter(angle: number) {
     if (!this.vueCanvas) return;
     this.vueCanvas.fillStyle = 'black';
-    const delimiterRadius = 5;
+    const delimiterRadius = this.getLineWidth();
     const baseRadius = this.getRadius();
     const x = xCenter + Math.cos(angle) * baseRadius;
     const y = yCenter + Math.sin(angle) * baseRadius;
@@ -263,6 +272,9 @@ export default class Breathe extends Vue {
   justify-content: center;
   align-items: center;
   color: white;
+}
+.text-container {
+  margin-top: 50px;
 }
 .isActive {
   font-weight: 800;

@@ -8,6 +8,7 @@
         :current="current"
       />
     </div>
+    <p class="nb-cycles">{{nbCycles}}</p>
     <div
       v-on:click="toggleSound"
       v-bind:class="isSoundActive ? 'icon-sound icon-sound_active' : 'icon-sound'"
@@ -33,6 +34,8 @@ const INCREMENT_DURATION_SECONDS = 0.01;
 })
 export default class Breathe extends Vue {
   current = 0
+
+  nbCycles = 0
 
   inspire = 4
 
@@ -61,7 +64,10 @@ export default class Breathe extends Vue {
 
   increment() {
     this.current = Math.round((this.current + INCREMENT_DURATION_SECONDS) * 100) / 100;
-    if (this.current >= this.getCycleLength()) this.current = 0;
+    if (this.current >= this.getCycleLength()) {
+      this.current = 0;
+      this.nbCycles += 1;
+    }
     if (this.shouldPlaySound()) {
       if (this.soundGong) {
         this.soundGong.play();
@@ -95,6 +101,14 @@ export default class Breathe extends Vue {
   width: 100vw;
   background-image: url("../assets/background.jpg");
   background-size: cover;
+}
+
+.nb-cycles {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  color: white;
+  margin: 0px;
 }
 
 .icon-sound {
