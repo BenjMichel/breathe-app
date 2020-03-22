@@ -33,8 +33,8 @@ function getRadius({
   expire: number;
   hold: number;
 }) {
-  const base = 60;
-  const amplitude = 50;
+  const base = 50;
+  const amplitude = 40;
   const ratio = getRadiusRatio({
     current, inspire, expire, hold,
   });
