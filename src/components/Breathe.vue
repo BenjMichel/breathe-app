@@ -8,14 +8,18 @@
         :current="current"
       />
     </div>
-    <p class="nb-cycles">{{nbCycles}}</p>
-    <div
-      v-on:click="toggleSound"
-      v-bind:class="isSoundActive ? 'icon-sound icon-sound_active' : 'icon-sound'"
-    >
-      <ion-icon
-        v-bind:name="isSoundActive ? 'volume-high-outline' : 'volume-off-outline'"
-      ></ion-icon>
+    <div class="bottom-row">
+      <div class="nb-cycles-container">
+        <p class="nb-cycles">{{nbCycles}}</p>
+      </div>
+      <div
+        v-on:click="toggleSound"
+        v-bind:class="isSoundActive ? 'icon-sound icon-sound_active' : 'icon-sound'"
+      >
+        <ion-icon
+          v-bind:name="isSoundActive ? 'volume-high-outline' : 'volume-off-outline'"
+        ></ion-icon>
+      </div>
     </div>
   </div>
 </template>
@@ -103,26 +107,41 @@ export default class Breathe extends Vue {
   background-size: cover;
 }
 
-.nb-cycles {
+.bottom-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100vw - 20px);
   position: fixed;
-  left: 10px;
-  bottom: 10px;
-  color: white;
+  bottom: 0px;
+  margin: 16px 10px;
+}
+
+.nb-cycles-container {
   margin: 0px;
-  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+}
+
+.nb-cycles {
+  color: white;
+  margin: 8px 0px 0px;
 }
 
 .icon-sound {
-  position: fixed;
-  right: 10px;
-  bottom: 10px;
   cursor: pointer;
   font-size: 32px;
+  height: 32px;
   transition: all 0.3s ease;
 }
 
 .icon-sound_active {
-  font-size: 36px;
+  font-size: 32px;
+  height: 32px;
   color: white;
   right: 8px;
   bottom: 8px;
