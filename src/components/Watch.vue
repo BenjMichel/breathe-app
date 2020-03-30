@@ -3,7 +3,7 @@
     <canvas id="c"></canvas>
     <div class="text-container">
       <p v-bind:class="isInspireActive ? 'isActive' : ''">Inspire: {{inspire}}</p>
-      <p v-bind:class="isHoldActive ? 'isActive' : ''">Hold: {{hold}}</p>
+      <p v-if="shouldDisplayHold" v-bind:class="isHoldActive ? 'isActive' : ''">Hold: {{hold}}</p>
       <p v-bind:class="isExpireActive ? 'isActive' : ''">Expire: {{expire}}</p>
     </div>
   </div>
@@ -89,6 +89,10 @@ export default class Breathe extends Vue {
 
   get isExpireActive() {
     return this.current >= this.inspire + this.hold;
+  }
+
+  get shouldDisplayHold() {
+    return this.hold > 0;
   }
 
   getRadius() {

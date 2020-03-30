@@ -13,8 +13,14 @@
         <p class="nb-cycles">{{nbCycles}}</p>
       </div>
       <div
+        v-on:click="changeCurrentPreset"
+        class="icon icon_active"
+      >
+        <ion-icon name="settings-outline"></ion-icon>
+      </div>
+      <div
         v-on:click="toggleSound"
-        v-bind:class="isSoundActive ? 'icon-sound icon-sound_active' : 'icon-sound'"
+        v-bind:class="isSoundActive ? 'icon icon_active' : 'icon'"
       >
         <ion-icon
           v-bind:name="isSoundActive ? 'volume-high-outline' : 'volume-off-outline'"
@@ -31,6 +37,22 @@ import Watch from './Watch.vue';
 
 const INCREMENT_DURATION_SECONDS = 0.01;
 
+const presets = [
+  {
+    inspire: 4,
+    hold: 4,
+    expire: 4,
+  },
+  {
+    inspire: 4,
+    expire: 4,
+  },
+  {
+    inspire: 6,
+    expire: 6,
+  },
+];
+
 @Component({
   components: {
     Watch,
@@ -41,17 +63,29 @@ export default class Breathe extends Vue {
 
   nbCycles = 0
 
-  inspire = 4
-
-  hold = 4
-
-  expire = 4
+  currentPresetIndex = 0
 
   timeout: number | null = null
 
   isSoundActive = false
 
   soundGong: Howl = new Howl({ src: ['gong.mp3'] })
+
+  getCurrentPreset() {
+    return presets[this.currentPresetIndex];
+  }
+
+  get inspire() {
+    return this.getCurrentPreset().inspire || 0;
+  }
+
+  get expire() {
+    return this.getCurrentPreset().expire || 0;
+  }
+
+  get hold() {
+    return this.getCurrentPreset().hold || 0;
+  }
 
   getCycleLength() {
     return this.inspire + this.expire + this.hold;
@@ -95,6 +129,10 @@ export default class Breathe extends Vue {
   toggleSound() {
     this.isSoundActive = !this.isSoundActive;
   }
+
+  changeCurrentPreset() {
+    this.currentPresetIndex = (this.currentPresetIndex + 1) % presets.length;
+  }
 }
 </script>
 
@@ -132,16 +170,14 @@ export default class Breathe extends Vue {
   margin: 8px 0px 0px;
 }
 
-.icon-sound {
+.icon {
   cursor: pointer;
   font-size: 32px;
   height: 32px;
   transition: all 0.3s ease;
 }
 
-.icon-sound_active {
-  font-size: 32px;
-  height: 32px;
+.icon_active {
   color: white;
   right: 8px;
   bottom: 8px;
